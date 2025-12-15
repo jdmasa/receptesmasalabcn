@@ -1,49 +1,256 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masala Barcelona - Receptes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<script>
-function loadXMLDoc() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      myFunction(this);
-    }
-  };
-  xmlhttp.open("GET", "receptes.xml", true);
-  xmlhttp.send();
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
 
-function myFunction(xml) {
-  const parser = new DOMParser();
-  var x, i, xmlDoc, txt;
-  xmlDoc = xml.responseXML;
-  txt = "";
-  list = [];
-  x = xmlDoc.getElementsByTagName("item");
-  for (i = 0; i< x.length; i++) {
-    
-    list.push(
-      {"title": x[i].getElementsByTagName("title")[0].textContent,
-          "content":  x[i].getElementsByTagName("content:encoded")[0].innerHTML}
-    );    
-  }
-  list.sort(function (a, b) {
-  if (a.title < b.title) {
-    return -1;
-  }
-  if (a.title > b.title) {
-    return 1;
-  }
-  return 0;
-});
-  
-  for (i = 0; i< list.length; i++) {
-    console.log(list[i]);
-    document.getElementById("index").innerHTML += list[i].title + "<br/>";
-  
-    document.getElementById("body").innerHTML += "<h2>" + list[i].title + "</h2><p>" + list[i].content.replace("<![CDATA[", "").replace("]]>", ""); + "</p>";
-  }
-}
-  loadXMLDoc();
-</script>
-<h1>Hello!</h1>
-<p id="index"></p>
-<div id="body" style="white-space: pre-wrap;"></div>
+        header {
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 3px solid #FFD700;
+            box-shadow: 0 4px 6px rgba(255, 215, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #FFD700 0%, #FFF 50%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            border: 1px solid #333;
+        }
+
+        .sidebar h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #FFD700;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 0.5rem;
+        }
+
+        #index {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #index a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        #index a:hover {
+            background: #2a2a2a;
+            border-left-color: #FFD700;
+            padding-left: 1rem;
+        }
+
+        .content {
+            background: #fff;
+            color: #000;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .recipe {
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .recipe:last-child {
+            border-bottom: none;
+        }
+
+        .recipe h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #000;
+            padding-left: 1rem;
+            border-left: 4px solid #FFD700;
+        }
+
+        .recipe p {
+            white-space: pre-wrap;
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .recipe img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe ul, .recipe ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .recipe li {
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe strong {
+            color: #000;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #000;
+            color: #FFD700;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Masala Barcelona</h1>
+        <p class="subtitle">Col·lecció de Receptes</p>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Índex de Receptes</h2>
+            <div id="index"></div>
+        </aside>
+
+        <main class="content">
+            <div class="loading">Carregant receptes...</div>
+            <div id="body"></div>
+        </main>
+    </div>
+
+    <footer>
+        &copy; Masala Barcelona - Receptes de cuina
+    </footer>
+
+    <script>
+        function loadXMLDoc() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    myFunction(this);
+                }
+            };
+            xmlhttp.open("GET", "receptes.xml", true);
+            xmlhttp.send();
+        }
+
+        function myFunction(xml) {
+            const parser = new DOMParser();
+            var x, i, xmlDoc, txt;
+            xmlDoc = xml.responseXML;
+            txt = "";
+            list = [];
+            x = xmlDoc.getElementsByTagName("item");
+
+            for (i = 0; i < x.length; i++) {
+                list.push({
+                    "title": x[i].getElementsByTagName("title")[0].textContent,
+                    "content": x[i].getElementsByTagName("content:encoded")[0].innerHTML
+                });
+            }
+
+            list.sort(function (a, b) {
+                if (a.title < b.title) {
+                    return -1;
+                }
+                if (a.title > b.title) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            // Clear loading message
+            document.querySelector('.loading').style.display = 'none';
+
+            // Build index
+            var indexHTML = '';
+            var bodyHTML = '';
+
+            for (i = 0; i < list.length; i++) {
+                var recipeId = 'recipe-' + i;
+                indexHTML += '<a href="#' + recipeId + '">' + list[i].title + '</a>';
+                bodyHTML += '<div class="recipe" id="' + recipeId + '">';
+                bodyHTML += '<h2>' + list[i].title + '</h2>';
+                bodyHTML += '<div>' + list[i].content.replace("<![CDATA[", "").replace("]]>", "") + '</div>';
+                bodyHTML += '</div>';
+            }
+
+            document.getElementById("index").innerHTML = indexHTML;
+            document.getElementById("body").innerHTML = bodyHTML;
+        }
+
+        loadXMLDoc();
+    </script>
+</body>
+</html>
