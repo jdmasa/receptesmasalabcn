@@ -63,54 +63,82 @@
 		height: calc(100vh - 130px);
 		background: #1a1a1a;
 		padding: 2rem 1.5rem;
-		overflow-y: auto;
 		border-right: 2px solid #FFD700;
 		z-index: 100;
 		box-shadow: 4px 0 12px rgba(255, 215, 0, 0.1);
+		display: flex;
+		flex-direction: column;
 	}
 
-	#sideindex::before {
-		content: 'Índex de Receptes';
-		display: block;
+	.toc-header {
 		font-size: 1.1rem;
 		font-weight: 600;
 		color: #FFD700;
-		margin-bottom: 1.5rem;
+		margin-bottom: 1rem;
 		padding-bottom: 0.75rem;
 		border-bottom: 2px solid #FFD700;
+		flex-shrink: 0;
 	}
 
-	#sideindex::-webkit-scrollbar {
+	.search-box-magazine {
+		margin-bottom: 1rem;
+		flex-shrink: 0;
+	}
+
+	.search-box-magazine input {
+		width: 100%;
+		padding: 0.75rem;
+		border: 2px solid #333;
+		border-radius: 6px;
+		background: #0a0a0a;
+		color: #fff;
+		font-size: 0.9rem;
+		transition: border-color 0.3s ease;
+	}
+
+	.search-box-magazine input:focus {
+		outline: none;
+		border-color: #FFD700;
+	}
+
+	.search-box-magazine input::placeholder {
+		color: #666;
+	}
+
+	.index-scroll {
+		overflow-y: auto;
+		flex: 1;
+		margin-right: -0.5rem;
+		padding-right: 0.5rem;
+	}
+
+	.index-scroll::-webkit-scrollbar {
 		width: 8px;
 	}
 
-	#sideindex::-webkit-scrollbar-track {
+	.index-scroll::-webkit-scrollbar-track {
 		background: #0a0a0a;
+		border-radius: 4px;
 	}
 
-	#sideindex::-webkit-scrollbar-thumb {
+	.index-scroll::-webkit-scrollbar-thumb {
 		background: #FFD700;
 		border-radius: 4px;
 	}
 
-	#sideindex::-webkit-scrollbar-thumb:hover {
+	.index-scroll::-webkit-scrollbar-thumb:hover {
 		background: #FFC700;
 	}
 
-	#sideindex br {
-		display: none;
-	}
-
-	#sideindex::after {
-		content: '';
-		display: block;
-		height: 2rem;
-	}
-
-	#sideindex {
+	#sideindex-content {
 		line-height: 2.2;
 		color: #ddd;
 		font-size: 0.9rem;
+	}
+
+	#sideindex-content br {
+		display: block;
+		margin: 0.5rem 0;
 	}
 </style>
 </head>
@@ -132,7 +160,15 @@
 	</div>
 </div>
 
-<p id="sideindex"></p>
+<div id="sideindex">
+	<div class="toc-header">Índex de Receptes</div>
+	<div class="search-box-magazine">
+		<input type="text" id="search-input-magazine" placeholder="Cerca receptes..." onkeyup="filterRecipesMagazine()">
+	</div>
+	<div class="index-scroll">
+		<div id="sideindex-content"></div>
+	</div>
+</div>
 
 <script type="text/javascript">
 
@@ -181,12 +217,28 @@
 		for (i = 0; i< list.length; i++) {
 			console.log(list[i]);
 			document.getElementById("index").innerHTML += list[i].title + "<br/>";
-			document.getElementById("sideindex").innerHTML += list[i].title + "<br/>";
+			document.getElementById("sideindex-content").innerHTML += '<div class="toc-item">' + list[i].title + '</div>';
 
 			const node = document.createElement("div");
 			node.style.cssText = "padding: 2rem; background: #fff; color: #000;";
 			node.innerHTML = "<h2 style='color: #000; border-left: 4px solid #FFD700; padding-left: 1rem; margin-bottom: 1.5rem;'>" + list[i].title + "</h2><div style='color: #333; line-height: 1.8;'>" + processContent(list[i].content) + "</div>";
 			document.getElementById("flipbook").appendChild(node);
+		}
+	}
+
+	function filterRecipesMagazine() {
+		var input = document.getElementById('search-input-magazine');
+		var filter = input.value.toLowerCase();
+		var content = document.getElementById('sideindex-content');
+		var items = content.getElementsByClassName('toc-item');
+
+		for (var i = 0; i < items.length; i++) {
+			var txtValue = items[i].textContent || items[i].innerText;
+			if (txtValue.toLowerCase().indexOf(filter) > -1) {
+				items[i].style.display = "";
+			} else {
+				items[i].style.display = "none";
+			}
 		}
 	}
 

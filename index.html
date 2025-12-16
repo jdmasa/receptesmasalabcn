@@ -77,18 +77,71 @@
             background: #1a1a1a;
             padding: 2rem;
             border-radius: 12px;
-            height: fit-content;
             position: sticky;
             top: 180px;
             border: 1px solid #333;
+            max-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar h2 {
             font-size: 1.3rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: #FFD700;
             border-bottom: 2px solid #FFD700;
             padding-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background: #0a0a0a;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        .index-container {
+            overflow-y: auto;
+            flex: 1;
+            margin-right: -0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .index-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .index-container::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 4px;
+        }
+
+        .index-container::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 4px;
+        }
+
+        .index-container::-webkit-scrollbar-thumb:hover {
+            background: #FFC700;
         }
 
         #index {
@@ -194,7 +247,12 @@
     <div class="container">
         <aside class="sidebar">
             <h2>Índex de Receptes</h2>
-            <div id="index"></div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Cerca receptes..." onkeyup="filterRecipes()">
+            </div>
+            <div class="index-container">
+                <div id="index"></div>
+            </div>
         </aside>
 
         <main class="content">
@@ -270,6 +328,22 @@
 
             document.getElementById("index").innerHTML = indexHTML;
             document.getElementById("body").innerHTML = bodyHTML;
+        }
+
+        function filterRecipes() {
+            var input = document.getElementById('search-input');
+            var filter = input.value.toLowerCase();
+            var index = document.getElementById('index');
+            var links = index.getElementsByTagName('a');
+
+            for (var i = 0; i < links.length; i++) {
+                var txtValue = links[i].textContent || links[i].innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    links[i].style.display = "";
+                } else {
+                    links[i].style.display = "none";
+                }
+            }
         }
 
         loadXMLDoc();
