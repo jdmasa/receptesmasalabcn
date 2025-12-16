@@ -147,6 +147,14 @@
 		xmlhttp.send();
 	}
 
+	function processContent(content) {
+		// Remove CDATA markers
+		var processed = content.replace("<![CDATA[", "").replace("]]>", "");
+		// Replace line breaks with <br> tags
+		processed = processed.replace(/\n/g, '<br>');
+		return processed;
+	}
+
 	function renderPage(xml) {
 		const parser = new DOMParser();
 		var x, i, xmlDoc, txt;
@@ -177,7 +185,7 @@
 
 			const node = document.createElement("div");
 			node.style.cssText = "padding: 2rem; background: #fff; color: #000;";
-			node.innerHTML = "<h2 style='color: #000; border-left: 4px solid #FFD700; padding-left: 1rem; margin-bottom: 1.5rem;'>" + list[i].title + "</h2><div style='color: #333; line-height: 1.8;'>" + list[i].content.replace("<![CDATA[", "").replace("]]>", "") + "</div>";
+			node.innerHTML = "<h2 style='color: #000; border-left: 4px solid #FFD700; padding-left: 1rem; margin-bottom: 1.5rem;'>" + list[i].title + "</h2><div style='color: #333; line-height: 1.8;'>" + processContent(list[i].content) + "</div>";
 			document.getElementById("flipbook").appendChild(node);
 		}
 	}

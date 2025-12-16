@@ -219,6 +219,14 @@
             xmlhttp.send();
         }
 
+        function processContent(content) {
+            // Remove CDATA markers
+            var processed = content.replace("<![CDATA[", "").replace("]]>", "");
+            // Replace line breaks with <br> tags
+            processed = processed.replace(/\n/g, '<br>');
+            return processed;
+        }
+
         function myFunction(xml) {
             const parser = new DOMParser();
             var x, i, xmlDoc, txt;
@@ -256,7 +264,7 @@
                 indexHTML += '<a href="#' + recipeId + '">' + list[i].title + '</a>';
                 bodyHTML += '<div class="recipe" id="' + recipeId + '">';
                 bodyHTML += '<h2>' + list[i].title + '</h2>';
-                bodyHTML += '<div>' + list[i].content.replace("<![CDATA[", "").replace("]]>", "") + '</div>';
+                bodyHTML += '<div>' + processContent(list[i].content) + '</div>';
                 bodyHTML += '</div>';
             }
 
