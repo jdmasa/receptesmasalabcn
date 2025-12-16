@@ -29,20 +29,50 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%);
-		padding: 1.5rem 2rem;
+		background: #000;
+		padding: 1.5rem 2rem 2.5rem;
 		z-index: 1000;
-		border-bottom: 2px solid #FFD700;
-		backdrop-filter: blur(10px);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+	}
+
+	.header::after {
+		content: '';
+		position: absolute;
+		bottom: -30px;
+		left: 0;
+		right: 0;
+		height: 30px;
+		background: #000;
+		clip-path: polygon(
+			0 0,
+			5% 15px,
+			10% 25px,
+			15% 28px,
+			20% 25px,
+			25% 15px,
+			30% 5px,
+			35% 0,
+			40% 5px,
+			45% 15px,
+			50% 25px,
+			55% 28px,
+			60% 25px,
+			65% 15px,
+			70% 5px,
+			75% 0,
+			80% 5px,
+			85% 15px,
+			90% 25px,
+			95% 28px,
+			100% 25px,
+			100% 0
+		);
 	}
 
 	.header h1 {
 		font-size: 1.8rem;
 		font-weight: 700;
-		background: linear-gradient(135deg, #FFD700 0%, #FFF 50%, #FFD700 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
+		color: #fff;
 		text-align: center;
 		margin: 0;
 	}
@@ -50,9 +80,9 @@
 	#sideindex {
 		position: fixed;
 		left: 0;
-		top: 80px;
+		top: 100px;
 		width: 280px;
-		height: calc(100vh - 80px);
+		height: calc(100vh - 100px);
 		background: #1a1a1a;
 		padding: 2rem 1.5rem;
 		overflow-y: auto;
